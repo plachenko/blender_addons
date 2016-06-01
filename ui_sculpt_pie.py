@@ -25,21 +25,68 @@ class VIEW3D_PIE_sculpt(Menu):
         #iterate through all the brushes...
         i = 0
         for brush in bpy.data.brushes:
-            #if there are more than 3, enter a new line.
-            if i <= 2:
-                #each row attaches a brush operation based on current iteration
-                row.operator(
-                    "paint.brush_select"
-                    , text = brush.name
-                    #, icon = 'BRUSH_'+brush.sculpt_tool
-                ).sculpt_tool = brush.sculpt_tool
-                i = i + 1
-            else:
-                #do the next row.
-                row = col.row(align=True)
-                row.alignment = 'EXPAND'
-                i = 0
+            if(brush.use_paint_sculpt):
+                #if there are more than 3, enter a new line.
+                if i % 3 == 0:
+                    if brush.name == 'Mask':
+                        #this is a hack, Probably should be in a seperate function...
+                        col.row().separator()
+                        mask_row = col.row(align=True)    
+                        
+                        mask = mask_row.operator(
+                            "paint.mask_flood_fill"
+                            , text = "Clear Mask"
+                        )
+                        mask.mode = "VALUE"
+                        mask.value = 0
+                        
+                        mask_row.operator(
+                            "paint.mask_flood_fill"
+                            , text = "Invert Mask"
+                        ).mode = "INVERT"
+                            
+                        mask_row.operator(
+                            "paint.brush_select"
+                            , text = brush.name
+                            , icon_value = layout.icon(brush)
+                        ).sculpt_tool = brush.sculpt_tool
+                        col.row().separator()
+                    else:
+                        
+                        row = col.row(align=True)
+                        row.alignment = 'EXPAND'
                 
+                #each row attaches a brush operation based on current iteration
+                        row.operator(
+                            "paint.brush_select"
+                            , text = brush.name
+                            , icon_value = layout.icon(brush)
+                        ).sculpt_tool = brush.sculpt_tool
+                        i = i + 1
+                else:
+                        row.operator(
+                            "paint.brush_select"
+                            , text = brush.name
+                            , icon_value = layout.icon(brush)
+                        ).sculpt_tool = brush.sculpt_tool
+                        i = i + 1
+        view = context.space_data
+        view_col = pie.column(align=True)
+        view_col.label("View Options:")
+        view_row = view_col.row(align=True)
+        view_row.prop(view, "use_matcap")
+        #view_row.operator("SpaceView3d.matcap_icon")
+       
+        bot = pie.column(align=True)
+        bot.label("")
+        bot_row = bot.row(align=True)
+       
+        top = pie.column(align=True)
+        top_row = top.row(align=True)
+        top_row.operator("screen.screen_full_area", text="FullScreen").use_hide_panels = True
+        top_row.operator("view3d.view_center_cursor", text="View")
+        
+        
 def register():
     bpy.utils.register_class(VIEW3D_PIE_sculpt)
     
