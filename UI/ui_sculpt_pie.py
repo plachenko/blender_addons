@@ -73,66 +73,89 @@ class VIEW3D_PIE_sculpt(Menu):
                             , text = brush.name
                             , icon_value = layout.icon(brush)
                         ).sculpt_tool = brush.sculpt_tool
+                        
                         i = i + 1
+                        
                     else:
                         row.operator(
                             "paint.brush_select"
                             , text = brush.name
                             , icon_value = layout.icon(brush)
                         ).sculpt_tool = brush.sculpt_tool
+                        
                         i = i + 1
+                        
         view = context.space_data
         view_col = pie.column(align=True)
         view_col.label("View Options:")
-        view_row = view_col.row(align=True)
-        view_row.alignment = "LEFT"
-        view_row.prop(view, "use_matcap")
+        
         view_row = view_col.row(align=True)
         view_row.alignment = "EXPAND"
-      
-        print(list(bpy.context.space_data.matcap_icon))
         
-        for i in range(1, 10):
-            if i%3 == 1:
-                view_row = view_col.row(align=True)
-                view_row.alignment = "EXPAND"
-                view_row.prop_enum(bpy.context.space_data, "matcap_icon", "0"+str(i), icon="MATCAP_0"+str(i))
-            else:
-                view_row.prop_enum(bpy.context.space_data, "matcap_icon", "0"+str(i), icon="MATCAP_0"+str(i))
+        view_row.operator("object.shade_smooth", text="Smooth surface")
+        view_row.operator("object.shade_flat", text="Flat surface")
+        
+        view_row = view_col.row(align=True)
+        
+        if context.space_data.use_matcap:
+            matcap_label = "Current: "+str(context.space_data.matcap_icon)
+        else:
+            matcap_label = "Matcap"
+        
+        view_row.alignment = "EXPAND"
+        view_row.prop(view, "use_matcap", text=matcap_label)
+        
+        if context.space_data.use_matcap:
+            for i in range(1, 25):
+                view_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
                 
+                if i == 6: 
+                    view_row = view_col.row(align=True)
+                    view_row.alignment = "EXPAND"
+                    view_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
+                if i == 15:
+                    view_row = view_col.row(align=True)
+                    view_row.alignment = "EXPAND"
+                    view_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
+                   
             #view_row.prop(view, "matcap_icon", "0"+str(i), icon="MATCAP_0"+str(i))
 
 
         sculpt = context.tool_settings.sculpt
         view_row = view_col.row(align=True)
-        view_row.operator("sculpt.dynamic_topology_toggle", text="Dynamic Topology")
+        view_row.operator("sculpt.dynamic_topology_toggle", text="Toggle Dynamic Topology", icon="MOD_DYNAMICPAINT")
         
         view_row = view_col.row(align=True)
         view_row.alignment = "EXPAND"
         if(len(context.object.modifiers)<1):
             view_row.operator("object.modifier_add", text="Multi-Res", icon='MOD_MULTIRES').type='MULTIRES'
         else:
-            view_row.operator("object.multires_subdivide", text="Subdivide").modifier = "Multires"
-            view_row.operator("object.modifier_remove", text="Remove subdivide").modifier = "Multires"
+            view_row.operator("object.multires_subdivide", text="Add", icon="MOD_SUBSURF").modifier = "Multires"
+            view_row.operator("object.multires_base_apply", text="Apply", icon="FILE_TICK").modifier = "Multires"
+            view_row.operator("object.modifier_remove", text="Remove", icon="CANCEL").modifier = "Multires"
+            
+            # TODO: Make a method to apply the multi-resolution modifier by taking the user into object mode and applying...
+            #view_row.operator("object.modifier_apply", text="Apply").modifier = "Multires"
         
         bot = pie.column(align=True)
  
         bot_row = bot.row(align=True)
         bot_row.alignment = "EXPAND"
         bot_row.prop(sculpt, "lock_z", text="lock Z", toggle=True)
-        bot_row.prop(sculpt, "use_symmetry_z", text="mirror Z", toggle=True)
+        bot_row.prop(sculpt, "use_symmetry_z", text="mir Z", toggle=True)
         bot_row.prop(sculpt, "tile_z", text="tile Z", toggle=True)
         
         bot_row = bot.row(align=True)
         bot_row.alignment = "EXPAND"
         bot_row.prop(sculpt, "lock_x", text="lock X", toggle=True)
-        bot_row.prop(sculpt, "use_symmetry_x", text="mirror X", toggle=True)
+        bot_row.prop(sculpt, "use_symmetry_x", text="mir X", toggle=True)
         bot_row.prop(sculpt, "tile_x", text="tile X", toggle=True)
         
         bot_row = bot.row(align=True)
+        bot_row.scale_x = 1.1
         bot_row.alignment = "EXPAND"
         bot_row.prop(sculpt, "lock_y", text="lock Y", toggle=True)
-        bot_row.prop(sculpt, "use_symmetry_y", text="mirror Y", toggle=True)
+        bot_row.prop(sculpt, "use_symmetry_y", text="mir Y", toggle=True)
         bot_row.prop(sculpt, "tile_y", text="tile Y", toggle=True)
         
         bot_row = bot.row(align=True)
@@ -143,30 +166,21 @@ class VIEW3D_PIE_sculpt(Menu):
         bot_row = bot.row(align=True)
         bot.prop(sculpt, "use_symmetry_feather", text="Feather")
 
-        '''
-        bot.prop(sculpt, "radial_symmetry", text="Radial")
         bot_row = bot.row(align=True)
-        bot.prop(sculpt, "use_symmetry_feather", text="Feather")
-
-        
-        bot_row = bot.row(align=True)
-        bot_row.label("lock")
-        '''
         
         #bot_row = bot.row(align=True)
-        #bot_row.label("tile_offset")
-        #bot_row.prop(sculpt, "tile_z", text="Z", toggle=True)
-        
-        #bot_row = bot.row(align=True)
-        #bot_row.prop(sculpt, "tile_offset", text="Tile Offset")
+        bot_row.prop(sculpt, "tile_offset", text="Tile Offset")
 
        
         top = pie.column(align=True)
         top_row = top.row(align=True)
         top_row.operator("screen.screen_full_area", text="FullScreen").use_hide_panels = True
+        top_row.prop(view, "show_only_render")
         
         top_row = top.row(align=True)
-        top_row.operator("view3d.view_center_cursor", text="View From Cursor")
+        #top_row.alignment = "EXPAND"
+        top_row.operator("view3d.view_center_cursor", text="Center to Cursor")
+        top_row.operator("view3d.snap_cursor_to_selected", text="Recenter")
         
         top_row = top.row(align=True)
         top_row.operator("view3d.view_selected", text="View Last Selected")
