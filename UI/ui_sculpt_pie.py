@@ -22,7 +22,7 @@ class VIEW3D_PIE_sculpt(Menu):
         layout = self.layout
         pie = layout.menu_pie()
         
-        #Define the column.
+        #Define the column.s
         col = pie.column(align=True)
         
         #define the first row -- make them buttons without spaces (alignment expand).
@@ -57,6 +57,7 @@ class VIEW3D_PIE_sculpt(Menu):
         
         #iterate through all the brushes...
         i = 0
+        '''
         for brush in bpy.data.brushes:
             if(brush.use_paint_sculpt):
                 #if there are more than 3, enter a new line.
@@ -84,7 +85,12 @@ class VIEW3D_PIE_sculpt(Menu):
                         ).sculpt_tool = brush.sculpt_tool
                         
                         i = i + 1
-                        
+        '''
+        
+        #for brush in bpy.data.brushes:
+            #row.template_curve_mapping(brush, "curve", brush=True)
+        s
+        row.prop(context.tool_settings.sculpt.brush, "sculpt_tool", icon_only = True)
         view = context.space_data
         view_col = pie.column(align=True)
         view_col.label("View Options:")
