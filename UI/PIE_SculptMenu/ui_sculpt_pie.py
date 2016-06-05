@@ -18,17 +18,21 @@ class VIEW3D_PIE_sculpt(Menu):
     
     def draw(self, context):
         
+        #local sculpt variable based on current sculpt tool
+        sculpt = context.tool_settings.sculpt
+        
         #define the pie menu from the LAYOUT
         layout = self.layout
         pie = layout.menu_pie()
         
-        #Define the column.s
+        #Define the column.
         col = pie.column(align=True)
         
         #define the first row -- make them buttons without spaces (alignment expand).
         row = col.row(align=True)
-        row.alignment='EXPAND'
+        row.alignment='EXPAND'   
         
+        #draw the mask row...
         def draw_mask_row():
             
             col.row().separator()
@@ -87,10 +91,10 @@ class VIEW3D_PIE_sculpt(Menu):
                         i = i + 1
         '''
         
-        #for brush in bpy.data.brushes:
-            #row.template_curve_mapping(brush, "curve", brush=True)
-        s
-        row.prop(context.tool_settings.sculpt.brush, "sculpt_tool", icon_only = True)
+        #try to use buttons instead of property
+        row.prop(context.tool_settings.sculpt.brush, "sculpt_tool", icon_only = True, event = True)
+        
+        #v iew Menu List...
         view = context.space_data
         view_col = pie.column(align=True)
         view_col.label("View Options:")
@@ -103,6 +107,7 @@ class VIEW3D_PIE_sculpt(Menu):
         
         view_row = view_col.row(align=True)
         
+        # matcap options...
         if context.space_data.use_matcap:
             matcap_label = "Current: "+str(context.space_data.matcap_icon)
         else:
@@ -111,6 +116,7 @@ class VIEW3D_PIE_sculpt(Menu):
         view_row.alignment = "EXPAND"
         view_row.prop(view, "use_matcap", text=matcap_label)
         
+        #iterate through all matcap options
         if context.space_data.use_matcap:
             for i in range(1, 25):
                 view_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
@@ -123,11 +129,10 @@ class VIEW3D_PIE_sculpt(Menu):
                     view_row = view_col.row(align=True)
                     view_row.alignment = "EXPAND"
                     view_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
-                   
-            #view_row.prop(view, "matcap_icon", "0"+str(i), icon="MATCAP_0"+str(i))
 
 
-        sculpt = context.tool_settings.sculpt
+ 
+        #toggle dynamic topology
         view_row = view_col.row(align=True)
         view_row.operator("sculpt.dynamic_topology_toggle", text="Toggle Dynamic Topology", icon="MOD_DYNAMICPAINT")
         
@@ -184,7 +189,6 @@ class VIEW3D_PIE_sculpt(Menu):
         top_row.prop(view, "show_only_render")
         
         top_row = top.row(align=True)
-        #top_row.alignment = "EXPAND"
         top_row.operator("view3d.view_center_cursor", text="Center to Cursor")
         top_row.operator("view3d.snap_cursor_to_selected", text="Recenter")
         
