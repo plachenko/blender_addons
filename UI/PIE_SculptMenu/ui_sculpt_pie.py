@@ -61,7 +61,6 @@ class VIEW3D_PIE_sculpt(Menu):
         
         #iterate through all the brushes...
         i = 0
-        '''
         for brush in bpy.data.brushes:
             if(brush.use_paint_sculpt):
                 #if there are more than 3, enter a new line.
@@ -89,10 +88,9 @@ class VIEW3D_PIE_sculpt(Menu):
                         ).sculpt_tool = brush.sculpt_tool
                         
                         i = i + 1
-        '''
         
         #try to use buttons instead of property
-        row.prop(context.tool_settings.sculpt.brush, "sculpt_tool", icon_only = True, event = True)
+        #row.prop(context.tool_settings.sculpt.brush, "sculpt_tool", icon_only = True, event = True)
         
         #v iew Menu List...
         view = context.space_data
