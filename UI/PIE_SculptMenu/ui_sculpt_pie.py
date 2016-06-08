@@ -119,16 +119,10 @@ class VIEW3D_PIE_sculpt(Menu):
             for i in range(1, 25):
                 view_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
                 
-                if i == 6: 
+                if i == 6 or i == 15: 
                     view_row = view_col.row(align=True)
                     view_row.alignment = "EXPAND"
                     view_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
-                if i == 15:
-                    view_row = view_col.row(align=True)
-                    view_row.alignment = "EXPAND"
-                    view_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
-
-
  
         #toggle dynamic topology
         view_row = view_col.row(align=True)
@@ -146,41 +140,44 @@ class VIEW3D_PIE_sculpt(Menu):
             # TODO: Make a method to apply the multi-resolution modifier by taking the user into object mode and applying...
             #view_row.operator("object.modifier_apply", text="Apply").modifier = "Multires"
         
+        #TODO: SIMPLE SUBDIVIDE MESH
+        
         bot = pie.column(align=True)
  
         bot_row = bot.row(align=True)
-        bot_row.alignment = "EXPAND"
+        bot_row.scale_x = 1
+        bot_row.alignment = "CENTER"
         bot_row.prop(sculpt, "lock_z", text="lock Z", toggle=True)
         bot_row.prop(sculpt, "use_symmetry_z", text="mir Z", toggle=True)
         bot_row.prop(sculpt, "tile_z", text="tile Z", toggle=True)
         
         bot_row = bot.row(align=True)
-        bot_row.alignment = "EXPAND"
+        bot_row.scale_x = 1
+        bot_row.alignment = "CENTER"
         bot_row.prop(sculpt, "lock_x", text="lock X", toggle=True)
         bot_row.prop(sculpt, "use_symmetry_x", text="mir X", toggle=True)
         bot_row.prop(sculpt, "tile_x", text="tile X", toggle=True)
         
         bot_row = bot.row(align=True)
-        bot_row.scale_x = 1.1
-        bot_row.alignment = "EXPAND"
+        bot_row.scale_x = 1
+        bot_row.alignment = "CENTER"
         bot_row.prop(sculpt, "lock_y", text="lock Y", toggle=True)
         bot_row.prop(sculpt, "use_symmetry_y", text="mir Y", toggle=True)
         bot_row.prop(sculpt, "tile_y", text="tile Y", toggle=True)
         
-        bot_row = bot.row(align=True)
-        
-        bot_row = bot.row(align=True)
-        bot_row.alignment = "EXPAND"
+        bot_row = bot.row(align=False)
+        #bot_row.scale_x = .3
+        bot_row.alignment = "CENTER"
         bot.prop(sculpt, "radial_symmetry", text="Radial")
         bot_row = bot.row(align=True)
         bot.prop(sculpt, "use_symmetry_feather", text="Feather")
 
-        bot_row = bot.row(align=True)
-        
+        bot_row = bot.row(align=False)
+        #bot_row.scale_x = .4
         #bot_row = bot.row(align=True)
         bot_row.prop(sculpt, "tile_offset", text="Tile Offset")
 
-       
+        #bpy.ops.origin.origin_set(type='ORIGIN_CENTER_OF_MASS')
         top = pie.column(align=True)
         top_row = top.row(align=True)
         top_row.operator("screen.screen_full_area", text="FullScreen").use_hide_panels = True
@@ -191,8 +188,7 @@ class VIEW3D_PIE_sculpt(Menu):
         top_row.operator("view3d.snap_cursor_to_selected", text="Recenter")
         
         top_row = top.row(align=True)
-        top_row.operator("view3d.view_selected", text="View Last Selected")
-        
+        top_row.operator("view3d.view_selected", text="Center to stroke")
         
         top_right = pie.column(align=False)
         topR_row = top_right.row(align=True)
