@@ -24,39 +24,46 @@ class VIEW3D_PIE_sculpt(Menu):
     bl_label = "Sculpt Menu"
     bl_idname = "sculpt.brush_pie"
     
-    
-    d = bpy.data
-    row1Arr = [
-        d.brushes['Blob'],
-        d.brushes['Clay'],
-        d.brushes['Clay Strips'],
-        d.brushes['Crease'],
-        d.brushes['Inflate/Deflate'],
-        d.brushes['Layer'],
-    ]
-    
-    row2Arr = [
-        d.brushes['Draw'],
-        d.brushes['Fill'],
-        d.brushes['Flatten/Contrast'],
-        d.brushes['Mask'],
-        d.brushes['Pinch/Magnify'],
-        d.brushes['Scrape/Peaks'],
-    ]
-    
-    row3Arr = [
-        d.brushes['Smooth'],
-        d.brushes['Grab'],
-        d.brushes['Nudge'],
-        d.brushes['Rotate'],
-        d.brushes['Snake Hook'],
-        d.brushes['Thumb'],
-    ]
-    
     #Draw the pie menu...
     
+    def sculpt_out(self, context):
+        #bpy.ops.sculptmode_toggle()
+        print('here!')
+    
     def draw(self, context):
+        self.scuSlpt_out
         
+        d = bpy.data
+        row1Arr = [
+            d.brushes['Blob'],
+            d.brushes['Clay'],
+            d.brushes['Clay Strips'],
+            d.brushes['Crease'],
+            d.brushes['Inflate/Deflate'],
+            d.brushes['Layer'],
+        ]
+        
+        row2Arr = [
+            d.brushes['Draw'],
+            d.brushes['Fill/Deepen'],
+            d.brushes['Flatten/Contrast'],
+            d.brushes['Mask'],
+            d.brushes['Pinch/Magnify'],
+            d.brushes['Scrape/Peaks'],
+        ]
+        
+        row3Arr = [
+            #d.brushes['Mask'],
+            d.brushes['Smooth'],
+            d.brushes['Grab'],
+            d.brushes['Nudge'],
+            d.brushes['Rotate'],
+            d.brushes['Snake Hook'],
+            d.brushes['Thumb'],
+        ]
+        
+        brushArr = [row1Arr, row2Arr, row3Arr]
+            
         #local sculpt variable based on current sculpt tool
         sculpt = context.tool_settings.sculpt
         
@@ -74,6 +81,8 @@ class VIEW3D_PIE_sculpt(Menu):
         #draw the mask row...
         def draw_mask_row():
             
+            mask_brush = bpy.data.brushes['Mask']
+            
             col.row().separator()
             
             mask_row = col.row(align=True)    
@@ -90,11 +99,13 @@ class VIEW3D_PIE_sculpt(Menu):
                 , text = "Invert Mask"
             ).mode = "INVERT"
                 
+            '''
             mask_row.operator(
                 "paint.brush_select"
                 , text = " "
-                , icon_value = layout.icon(brush)
-            ).sculpt_tool = brush.sculpt_tool
+                , icon_value = layout.icon(mask_brush)
+            ).sculpt_tool = mask_brush.sculpt_tool
+            '''
             
             col.row().separator()
         
@@ -102,35 +113,35 @@ class VIEW3D_PIE_sculpt(Menu):
         i = 0
         curBrush = bpy.context.tool_settings.sculpt.brush
         col.label("Brush: " + curBrush.name)
-        for brush in bpy.data.brushes:
-            if(brush.use_paint_sculpt):
+        for brusharray in brushArr:
+            for brush in brusharray:
                 
                 #if there are more than 3, enter a new line.
-                if brush.name != 'Mask':
+                #if brush.name != 'Mask':
                     
-                    if i % 6 == 0:
-                        row = col.row(align=True)
-                        row.alignment = 'EXPAND'
-                    #each row attaches a brush operation based on current iteration
-                        row.operator(
-                            "paint.brush_select"
-                            #, emboss = True
-                           # , text = brush.name
-                            , text = " "
-                            , icon_value = layout.icon(brush)
-                        ).sculpt_tool = brush.sculpt_tool
-                        
-                        i = i + 1
-                        
-                    else:
-                        row.operator(
-                            "paint.brush_select"
-                            #, text = brush.name
-                            , text = " "
-                            , icon_value = layout.icon(brush)
-                        ).sculpt_tool = brush.sculpt_tool
-                        
-                        i = i + 1
+                if i % 6 == 0:
+                    row = col.row(align=True)
+                    row.alignment = 'EXPAND'
+                #each row attaches a brush operation based on current iteration
+                    row.operator(
+                        "paint.brush_select"
+                        #, emboss = True
+                       # , text = brush.name
+                        , text = " "
+                        , icon_value = layout.icon(brush)
+                    ).sculpt_tool = brush.sculpt_tool
+                    
+                    i = i + 1
+                    
+                else:
+                    row.operator(
+                        "paint.brush_select"
+                        #, text = brush.name
+                        , text = " "
+                        , icon_value = layout.icon(brush)
+                    ).sculpt_tool = brush.sculpt_tool
+                    
+                    i = i + 1
         
         draw_mask_row()
         
@@ -201,16 +212,9 @@ class VIEW3D_PIE_sculpt(Menu):
         
         bot_row = bot.row(align=True)
         bot_row.alignment = "EXPAND"
-        bot_row.prop(sculpt, "lock_x", text="lock X", toggle=True)
-        bot_row.prop(sculpt, "use_symmetry_x", text="mir X", toggle=True)
-        bot_row.prop(sculpt, "tile_x", text="tile X", toggle=True)
         
         bot_row = bot.row(align=True)
         bot_row.scale_x = 1.1
-        bot_row.alignment = "EXPAND"
-        bot_row.prop(sculpt, "lock_y", text="lock Y", toggle=True)
-        bot_row.prop(sculpt, "use_symmetry_y", text="mir Y", toggle=True)
-        bot_row.prop(sculpt, "tile_y", text="tile Y", toggle=True)
         
         bot_row = bot.row(align=True)
         
@@ -232,18 +236,25 @@ class VIEW3D_PIE_sculpt(Menu):
         top_row.prop(view, "show_only_render")
         
         top_row = top.row(align=True)
-        top_row.operator("view3d.view_center_cursor", text="Center to Cursor")
+        top_row.operator("view3d.view_center_cursor", text="Center to Object")
         top_row.operator("view3d.snap_cursor_to_selected", text="Recenter")
         
         top_row = top.row(align=True)
-        top_row.operator("view3d.view_selected", text="View Last Selected")
-        
+        top_row.operator("view3d.view_selected", text="Center to Stroke")
         
         top_right = pie.column(align=False)
         topR_row = top_right.row(align=True)
+        topR_row.alignment = "EXPAND"
+        topR_row.prop(sculpt, "lock_x", text="lock X", toggle=True)
+        topR_row.prop(sculpt, "tile_x", text="tile X", toggle=True)
+        topR_row.prop(sculpt, "use_symmetry_x", text="mir X", toggle=True)
         
         top_left = pie.column(align=False)
         topL_row = top_left.row(align=True)
+        
+        topL_row.prop(sculpt, "use_symmetry_y", text="mir Y", toggle=True)
+        topL_row.prop(sculpt, "tile_y", text="tile Y", toggle=True)
+        topL_row.prop(sculpt, "lock_y", text="lock Y", toggle=True)
         
 def register():
     bpy.utils.register_class(VIEW3D_PIE_sculpt)
