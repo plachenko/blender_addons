@@ -26,12 +26,7 @@ class VIEW3D_PIE_sculpt(Menu):
     
     #Draw the pie menu...
     
-    def sculpt_out(self, context):
-        #bpy.ops.sculptmode_toggle()
-        print('here!')
-    
     def draw(self, context):
-        self.scuSlpt_out
         
         d = bpy.data
         row1Arr = [
@@ -148,18 +143,19 @@ class VIEW3D_PIE_sculpt(Menu):
         #try to use buttons instead of property
         #row.prop(context.tool_settings.sculpt.brush, "sculpt_tool", icon_only = True, event = True)
         
-        #v iew Menu List...
+        #view Menu List...
         view = context.space_data
-        view_col = pie.column(align=True)
-        view_col.label("View Options:")
         
-        view_row = view_col.row(align=True)
-        view_row.alignment = "EXPAND"
+        right_col = pie.column(align=True)
+        right_col.label("View Options:")
         
-        view_row.operator("object.shade_smooth", text="Smooth surface")
-        view_row.operator("object.shade_flat", text="Flat surface")
+        right_row = right_col.row(align=True)
+        right_row.alignment = "EXPAND"
         
-        view_row = view_col.row(align=True)
+        right_row.operator("object.shade_smooth", text="Smooth surface")
+        right_row.operator("object.shade_flat", text="Flat surface")
+        
+        right_row = right_col.row(align=True)
         
         #view_row.prop(bpy.context.space_data, 
         
@@ -169,35 +165,35 @@ class VIEW3D_PIE_sculpt(Menu):
         else:
             matcap_label = "Matcap"
         
-        view_row.alignment = "EXPAND"
-        view_row.prop(view, "use_matcap", text=matcap_label)
+        right_row.alignment = "EXPAND"
+        right_row.prop(view, "use_matcap", text=matcap_label)
         
         #iterate through all matcap options
         if context.space_data.use_matcap:
             for i in range(1, 25):
-                view_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
+                right_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
                 
                 if i == 6: 
-                    view_row = view_col.row(align=True)
-                    view_row.alignment = "EXPAND"
-                    view_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
+                    right_row = right_col.row(align=True)
+                    right_row.alignment = "EXPAND"
+                    right_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
                 if i == 15:
-                    view_row = view_col.row(align=True)
-                    view_row.alignment = "EXPAND"
-                    view_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
+                    right_row = right_col.row(align=True)
+                    right_row.alignment = "EXPAND"
+                    right_row.prop_enum(bpy.context.space_data, "matcap_icon", str(i).zfill(2), icon="MATCAP_"+str(i).zfill(2))       
  
         #toggle dynamic topology
-        view_row = view_col.row(align=True)
-        view_row.operator("sculpt.dynamic_topology_toggle", text="Toggle Dynamic Topology", icon="MOD_DYNAMICPAINT")
+        right_row = right_col.row(align=True)
+        right_row.operator("sculpt.dynamic_topology_toggle", text="Toggle Dynamic Topology", icon="MOD_DYNAMICPAINT")
         
-        view_row = view_col.row(align=True)
-        view_row.alignment = "EXPAND"
+        right_row = right_col.row(align=True)
+        right_row.alignment = "EXPAND"
         if(len(context.object.modifiers)<1):
-            view_row.operator("object.modifier_add", text="Multi-Res", icon='MOD_MULTIRES').type='MULTIRES'
+            right_row.operator("object.modifier_add", text="Multi-Res", icon='MOD_MULTIRES').type='MULTIRES'
         else:
-            view_row.operator("object.multires_subdivide", text="Add", icon="MOD_SUBSURF").modifier = "Multires"
-            view_row.operator("object.multires_base_apply", text="Apply", icon="FILE_TICK").modifier = "Multires"
-            view_row.operator("object.modifier_remove", text="Remove", icon="CANCEL").modifier = "Multires"
+            right_row.operator("object.multires_subdivide", text="Add", icon="MOD_SUBSURF").modifier = "Multires"
+            right_row.operator("object.multires_base_apply", text="Apply", icon="FILE_TICK").modifier = "Multires"
+            right_row.operator("object.modifier_remove", text="Remove", icon="CANCEL").modifier = "Multires"
             
             # TODO: Make a method to apply the multi-resolution modifier by taking the user into object mode and applying...
             #view_row.operator("object.modifier_apply", text="Apply").modifier = "Multires"
