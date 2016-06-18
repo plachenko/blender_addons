@@ -120,8 +120,6 @@ class VIEW3D_PIE_sculpt(Menu):
                 #each row attaches a brush operation based on current iteration
                     row.operator(
                         "paint.brush_select"
-                        #, emboss = True
-                        #, text = brush.name
                         , text = " "
                         , icon_value = layout.icon(brush)
                     ).sculpt_tool = brush.sculpt_tool
