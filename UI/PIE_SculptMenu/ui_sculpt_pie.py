@@ -121,7 +121,7 @@ class VIEW3D_PIE_sculpt(Menu):
                     row.operator(
                         "paint.brush_select"
                         #, emboss = True
-                       # , text = brush.name
+                        #, text = brush.name
                         , text = " "
                         , icon_value = layout.icon(brush)
                     ).sculpt_tool = brush.sculpt_tool
