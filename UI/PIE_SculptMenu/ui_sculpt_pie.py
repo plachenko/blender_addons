@@ -249,7 +249,6 @@ class VIEW3D_PIE_sculpt(Menu):
         topL_row.prop(sculpt, "use_symmetry_y", text="mir Y", toggle=True)
         topL_row.prop(sculpt, "tile_y", text="tile Y", toggle=True)
         topL_row.prop(sculpt, "lock_y", text="lock Y", toggle=True)
-
         
 def register():
     bpy.utils.register_class(VIEW3D_PIE_sculpt)
