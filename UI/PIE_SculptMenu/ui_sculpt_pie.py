@@ -1,6 +1,7 @@
 import bpy
 from bpy.types import Menu
 
+
 bl_info = {
     "name": "Sculpt Pie Menu",
     "author": "Denis Perchenko",
