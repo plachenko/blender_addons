@@ -9,16 +9,6 @@ bl_info = {
     "category": "User Interface",
 }
 
-class SimpleOperator(bpy.types.Operator):
-    bl_idname = "object.simple_operator"
-    bl_label = "Test"
-    
-    def execute(self, context):
-        print("o shit waddup")
-        return {'FINISHED'}
-    
-bpy.utils.register_class(SimpleOperator)
-
 class VIEW3D_PIE_sculpt(Menu):
     
     bl_label = "Sculpt Menu"
