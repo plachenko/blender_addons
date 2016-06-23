@@ -8,7 +8,7 @@ class custom_view(bpy.types.Operator):
     
     @classmethod
     def poll(cls, context):
-        return true
+        return True
     
     def execute(self, context):
         bpy.context.area.type = self.variable
@@ -16,7 +16,7 @@ class custom_view(bpy.types.Operator):
 
 class custom_pie(Menu):
     bl_idname = "window.pie_layout"
-    bl_label = "Select Label"
+    bl_label = ""
     
     def draw(self, context):
         layout = self.layout
@@ -24,20 +24,46 @@ class custom_pie(Menu):
         pie = layout.menu_pie()
         
         #LEFT
-        pie.operator("object.view_menu", text="Timeline", icon="TIME").variable = "TIMELINE"
+        col = pie.column()
+        row = col.row(align=True)
+        
+        row.operator("object.view_menu", text=" ", icon="NLA").variable = "DOPESHEET_EDITOR"
+        row.operator("object.view_menu", text=" ", icon="ACTION").variable = "DOPESHEET_EDITOR"
+        row.operator("object.view_menu", text=" ", icon="IPO").variable = "GRAPH_EDITOR"
+        
+        row = col.row(align=True)
+        row.operator("object.view_menu", text="  ", icon="TIME").variable = "TIMELINE"
+         
         #RIGHT
-        pie.operator("object.view_menu", text="Text", icon="TEXT").variable = "TEXT_EDITOR"
-        #BOTTOM
-        pie.operator("object.view_menu", text="Text", icon="VIEW3D").variable = "VIEW_3D"
-        #TOP
-        pie.operator("object.view_menu", text="Text", icon="TEXT").variable = "TEXT_EDITOR"
+        col = pie.column()
+        row = col.row(align=True)
+        row.operator("object.view_menu", text=" ", icon="IMAGE_COL").variable = "IMAGE_EDITOR"
+        row.operator("object.view_menu", text=" ", icon="SEQUENCE").variable = "SEQUENCE_EDITOR"
+        row.operator("object.view_menu", text=" ", icon="CLIP").variable = "CLIP_EDITOR"
+        
+        row = col.row(align=True)
+        row.operator("object.view_menu", text=" ", icon="TEXT").variable = "TEXT_EDITOR"
+        row.operator("object.view_menu", text=" ", icon="NODETREE").variable = "NODE_EDITOR"
+        row.operator("object.view_menu", text=" ", icon="LOGIC").variable = "LOGIC_EDITOR"
+        
         #TOP RIGHT
-        pie.operator("object.view_menu", text="Text", icon="TEXT").variable = "TEXT_EDITOR"
+        col = pie.column()
+        row = col.row(align=True)
+        row.operator("object.view_menu", text=" ", icon="BUTS").variable = "PROPERTIES"
+        row.operator("object.view_menu", text=" ", icon="OOPS").variable = "OUTLINER"
+        row.operator("object.view_menu", text=" ", icon="PREFERENCES").variable = "USER_PREFERENCES"
+        
+        row = col.row(align=True)
+        row.alignment = "EXPAND"
+        row.operator("object.view_menu", text="  ", icon="INFO").variable = "INFO"
+        
         #TOP LEFT
-        pie.operator("object.view_menu", text="Text", icon="TEXT").variable = "TEXT_EDITOR"
-        #BOT RIGHT
-        pie.operator("object.view_menu", text="Text", icon="TEXT").variable = "TEXT_EDITOR"
-        #BOT LEFT
+        col = pie.column()
+        row = col.row(align=True)
+        
+        row.operator("object.view_menu", text=" ", icon="FILESEL").variable = "FILE_BROWSER"
+        row.operator("object.view_menu", text=" ", icon="VIEW3D").variable = "VIEW_3D"
+        row.operator("object.view_menu", text=" ", icon="CONSOLE").variable = "CONSOLE"
 
 def register():
     bpy.utils.register_class(custom_view)
