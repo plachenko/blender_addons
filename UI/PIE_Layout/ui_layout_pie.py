@@ -1,6 +1,14 @@
 import bpy
 from bpy.types import Menu
 
+bl_info = {
+    "name": "Layout Pie Menu",
+    "author": "Denis Perchenko",
+    "blender": (2, 77, 0),
+    "description": "Enable Layout Menu",
+    "category": "User Interface",
+}
+
 class custom_view(bpy.types.Operator):
     bl_idname = "object.view_menu"
     bl_label = "view mode"
