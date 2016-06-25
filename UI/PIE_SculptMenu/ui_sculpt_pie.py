@@ -59,6 +59,7 @@ class VIEW3D_PIE_sculpt(Menu):
         #Define the column.
         col = pie.column(align=True)
         
+        
         #define the first row -- make them buttons without spaces (alignment expand).
         row = col.row(align=True)
         row.alignment='EXPAND'   
