@@ -4,7 +4,7 @@ from bpy.types import Menu
 bl_info = {
     "name": "Sculpt Pie Menu",
     "author": "Denis Perchenko",
-    "blender": (2, 77, 0),
+    "blender": (2, 79, 0),
     "description": "Enable Pie Menu in Sculpt mode",
     "category": "User Interface",
 }
